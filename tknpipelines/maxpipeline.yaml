@@ -1,0 +1,60 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: maxpipeline
+spec:
+  workspaces:
+  - name: maxsource
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+  - name: aws_access_key_id
+    description: AWS Access Key ID
+    type: string
+  - name: aws_access_key_secret
+    description: AWS Access Key Secret
+    type: string
+  - name: aws_region
+    description: AWS Region
+    type: string
+  - name: git-url
+    type: string
+    description: url of the git repo for the code of deployment
+  - name: git-revision
+    type: string
+    description: revision to be used from repo of the code for deployment
+    default: master
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+#      name: cusgitclone
+      kind: ClusterTask
+    workspaces:
+    - name: output
+      workspace: maxsource
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+    - name: revision
+      value: $(params.git-revision)
+  - name: uploadcust
+    taskRef:
+      name: upload
+    params:
+    - name: aws_access_key_id
+      value: $(params.aws_access_key_id)
+    - name: aws_access_key_secret
+      value: $(params.aws_access_key_secret)
+    - name: aws_region
+      value: $(params.aws_region)
+    workspaces:
+    - name: compress
+      workspace: maxsource
+    runAfter:
+    - fetch-repository

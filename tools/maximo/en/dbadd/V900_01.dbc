@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script SYSTEM "script.dtd">
+
+<script author="AneeshJ" scriptname="PERSONGROUP">
+  <description>Inserts users into TEST PERSONGROUP</description>
+	<statements>
+		<freeform description="Inserts users into TEST PERSONGROUP">
+			<sql>
+				delete from persongroup where persongroup = 'TEST';
+				INSERT INTO persongroup (PERSONGROUPID,PERSONGROUP,DESCRIPTION,LANGCODE,HASLD,ISCREWWORKGROUP) VALUES (PERSONGROUPSEQ.nextval,'TEST','Test Users','EN',0,0);
+			</sql>
+		</freeform>
+	</statements>
+</script>

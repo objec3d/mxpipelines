@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<product>
+	<name>Addon Product</name>
+	<version>
+		<major>9</major>
+		<minor>0</minor>
+		<patch>0</patch>
+		<build>001</build>
+	</version>
+	<dbmaxvarname>DBADD</dbmaxvarname>
+	<dbscripts>dbadd</dbscripts>
+	<dbversion>V900-01</dbversion>
+	<lastdbversion>V520-20</lastdbversion>
+</product>

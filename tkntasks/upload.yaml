@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: upload
+spec:
+  workspaces:
+    - name: compress
+  params:
+    - name: aws_access_key_id
+      description: AWS Access Key ID
+      type: string
+    - name: aws_access_key_secret
+      description: AWS Access Key Secret
+      type: string
+    - name: aws_region
+      description: AWS Region
+      type: string
+  steps:
+    - name: upload
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      script: |
+        #!/bin/sh
+        yum install -y unzip
+        yum install -y zip
+        echo "Compressing"
+        #tar czvf customarchive.zip *
+        zip -r customarchive.zip workspace/*
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
+        ./aws/install
+        aws configure set aws_access_key_id "$(inputs.params.aws_access_key_id)" --profile user2 && aws configure set aws_secret_access_key "$(inputs.params.aws_access_key_secret)" --profile user2 && aws configure set region "$(inputs.params.aws_region)" --profile user2 && aws configure set output "json" --profile user2
+        aws s3 cp customarchive.zip s3://cicdmaximo2/customarchive.zip --profile user2

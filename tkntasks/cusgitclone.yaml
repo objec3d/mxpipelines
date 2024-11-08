@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cusgitclone
+spec:
+  workspaces:
+    - name: output
+  params:
+    - name: url
+      description: GIT URL
+      type: string
+  steps:
+    - name: clone
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      script: |
+        #!/bin/sh
+        yum install -y git
+        pwd
+        cd workspace/output
+        git clone $(inputs.params.url)
+        ls
