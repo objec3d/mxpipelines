@@ -18,6 +18,18 @@ spec:
     - name: s3_uri
       description: S3 URI for the Customisation Archive
       type: string
+    - name: crd_name
+      description: Name of custom resource definition
+      type: string
+    - name: s3_url
+      description: S3 URL for updating the CRD
+      type: string
+    - name: cus_name
+      description: Customisation Name
+      type: string
+    - name: manage_proj
+      description: Manage Project Name
+      type: string
   steps:
     - name: upload
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
@@ -27,8 +39,10 @@ spec:
         yum install -y zip
         echo "Compressing"
         #tar czvf customarchive.zip *
-        zip -r customarchive.zip workspace/*
+        cd workspace/compress
+        zip -r customarchive.zip *
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
         ./aws/install
         aws configure set aws_access_key_id "$(inputs.params.aws_access_key_id)" --profile user2 && aws configure set aws_secret_access_key "$(inputs.params.aws_access_key_secret)" --profile user2 && aws configure set region "$(inputs.params.aws_region)" --profile user2 && aws configure set output "json" --profile user2
         aws s3 cp customarchive.zip $(inputs.params.s3_uri) --profile user2
+        oc patch ManageWorkspace/$(inputs.params.crd_name) -p "{\"spec\": {\"settings\": {\"customizationList\": [{\"customizationArchiveName\": \"$(inputs.params.cus_name)\",\"customizationArchiveUrl\": \"$(inputs.params.s3_url)\"}]}}}" -n $(inputs.params.manage_proj) --type=merge

@@ -5,10 +5,10 @@
 		<major>9</major>
 		<minor>0</minor>
 		<patch>0</patch>
-		<build>001</build>
+		<build>002</build>
 	</version>
 	<dbmaxvarname>DBADD</dbmaxvarname>
 	<dbscripts>dbadd</dbscripts>
-	<dbversion>V900-01</dbversion>
+	<dbversion>V900-02</dbversion>
 	<lastdbversion>V520-20</lastdbversion>
 </product>
