@@ -43,21 +43,21 @@ spec:
   tasks:
   - name: fetch-repository
     taskRef:
-      name: git-clone
-#      name: cusgitclone
-      kind: ClusterTask
+#      name: git-clone
+      name: cusgitclone
+#      kind: ClusterTask
     workspaces:
     - name: output
       workspace: maxsource
     params:
     - name: url
       value: $(params.git-url)
-    - name: subdirectory
-      value: ""
-    - name: deleteExisting
-      value: "true"
-    - name: revision
-      value: $(params.git-revision)
+ #   - name: subdirectory
+ #     value: ""
+ #   - name: deleteExisting
+ #     value: "true"
+ #   - name: revision
+ #     value: $(params.git-revision)
   - name: uploadcust
     taskRef:
       name: upload
